@@ -7,9 +7,9 @@ and stay away from the spooky Wordpress admin panel.
 - Add to Wordpress Plugin Directory.
 - Write a quick install guide.
 - Make WP cascade 'move to trash' to 'relations'
-- Pass-trough Discourse pins to WP.
 - Add Custom CSS scoped to the content.
 - Add automatic link (button) to Discourse Topic in WP Post.
 - Pass-trough the Discourse author. (auto-create WP authors ?)
 - Add a 'ignore' trigger.
 - Sync Discourse comments to Wordpress.
+- ~~Pass-trough Discourse pins to WP.~~

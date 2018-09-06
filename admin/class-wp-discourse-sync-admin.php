@@ -103,6 +103,7 @@ class wp_discourse_sync_Admin {
 				), true
 			);
 
+			$data['pinned'] ? stick_post($res) : unstick_post($res);
 			$relations[$data_id] = $res;
 			$option['relations'] = $relations;
 
