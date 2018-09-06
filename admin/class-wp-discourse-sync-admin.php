@@ -88,45 +88,27 @@ class wp_discourse_sync_Admin {
 		$body = $this->get_body($data_id);
 
 		$status = ((!$data['deleted_at'] || !$data['archived']) ? 'publish' : 'draft');
-		print_r($option);
+		$wp_id = $relations[$data_id] != NULL ? $relations[$data_id] : 0;
 
-		if($relations[$data_id] != NULL){
-			$wp_id = $relations[$data_id];
+		try {
 
-			echo 'Updated existant Post';
-			wp_insert_post(array(
+			$res = wp_insert_post(array(
 					'ID' => $wp_id,
 					'post_title' => $data['fancy_title'],
 					'post_content' => $body,
 					'post_status' => $status,
 					'post_type' => 'post',
 					'post_category' => array($data['category'])
-				)
+				), true
 			);
 
-		}
+			$relations[$data_id] = $res;
+			$option['relations'] = $relations;
 
-		else{
-			try {
+			update_option('discourse_sync', $option);
 
-				echo 'Created new Post';
-				$res = wp_insert_post(array(
-						'post_title' => $data['fancy_title'],
-						'post_content' => $body,
-						'post_status' => $status,
-						'post_type' => 'post',
-						'post_category' => array($data['category'])
-					), true
-				);
-
-				$relations[$data_id] = $res;
-				$option['relations'] = $relations;
-
-				update_option('discourse_sync', $option);
-
-			} catch (Exception $e) {
-	    	echo 'Post insertion failed: ',  $e->getMessage(), "\n";
-			}
+		} catch (Exception $e) {
+    	echo 'Post insertion failed: ',  $e->getMessage(), "\n";
 		}
 
 	}
