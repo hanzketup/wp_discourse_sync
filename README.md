@@ -13,3 +13,8 @@ and stay away from the spooky Wordpress admin panel.
 - Add a 'ignore' trigger.
 - Sync Discourse comments to Wordpress.
 - ~~Pass-trough Discourse pins to WP.~~
+
+
+## Contribute
+Pull requests are always welcome and appreciated.
+I'm not a PHP dev so if anything looks goofy and needs to be fixed, Open a new Issue.
