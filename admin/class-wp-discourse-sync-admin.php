@@ -99,7 +99,7 @@ class wp_discourse_sync_Admin {
 					'post_status' => $status,
 					'post_type' => 'post',
 					'sticky' => $data['pinned'],
-					'post_category' => array($data['category'])
+					'post_category' => array($option['category'])
 				), true
 			);
 
