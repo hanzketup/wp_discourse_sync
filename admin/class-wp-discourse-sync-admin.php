@@ -130,7 +130,7 @@ class wp_discourse_sync_Admin {
 		 $discourse_base_url = $option['webhook_url'];
 		 $discourse_key = $option['key'];
 
-		 $req = wp_remote_get($discourse_base_url . "/posts/" . $id . ".json?api_key=" . $discourse_key);
+		 $req = wp_remote_get($discourse_base_url . "/t/" . $id . ".json?api_key=" . $discourse_key);
 		 $cooked = json_decode($req['body'])->cooked;
 
 		 return $cooked;
