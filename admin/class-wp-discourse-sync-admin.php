@@ -131,7 +131,7 @@ class wp_discourse_sync_Admin {
 		 $discourse_key = $option['key'];
 
 		 $req = wp_remote_get($discourse_base_url . "/t/" . $id . ".json?api_key=" . $discourse_key);
-		 $cooked = json_decode($req['body'])->cooked;
+		 $cooked = json_decode($req['body'])->post_stream->posts[0]->cooked;
 
 		 return $cooked;
 
