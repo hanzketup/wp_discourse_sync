@@ -61,15 +61,44 @@ class wp_discourse_sync_Admin {
 	 */
 	public function webhook_endpoint_callback() {
 		status_header(200);
+		$option = get_option( 'discourse_sync' );
+		$discourse_base_url = $option['webhook_url'];
+		$discourse_key = $option['key'];
+		$raw_data = json_decode(file_get_contents('php://input'), true);
 
-		$data = json_decode(file_get_contents('php://input'), true)['topic'];
-		print_r($data);
-
-		if(!empty($data)){
-			$this->create_or_update_posts($data);
+		$event_header = getallheaders()['X-Discourse-Event'];
+		if(empty($event_header)){
+			echo 'Missing discourse event header.';
+			die;
 		}
 
-    die;
+		if($event_header == 'topic_created'){
+			echo 'Creating post';
+			$this->create_or_update_posts($raw_data['topic']);
+			die;
+
+		} elseif($event_header == 'topic_edited'){
+			echo 'Updating post';
+
+			$req = wp_remote_get($discourse_base_url . "/t/" . $raw_data['post']['topic_id'] . ".json?api_key=" . $discourse_key);
+ 		 	$fetched_data = json_decode($req['body'], true);
+			unset($fetched_data->post_stream, $fetched_data->timeline_lookup, $fetched_data->suggested_topics, $fetched_data->details, $fetched_data->actions_summary);
+			print_r($fetched_data);
+
+			$this->create_or_update_posts($fetched_data);
+			die;
+
+		} elseif($event_header == 'topic_destroyed'){
+			echo 'Destroying post';
+			$this->create_or_update_posts($raw_data['topic'], true);
+			die;
+
+		} else{
+			status_header(422);
+			echo 'Invalid data provided, dying.';
+			die;
+
+		}
 
 	}
 
@@ -80,14 +109,14 @@ class wp_discourse_sync_Admin {
 	 * @since    1.0.0
  	 * @param      	string json-formated webhook payload
 	 */
-	public function create_or_update_posts($data) {
+	public function create_or_update_posts($data, $destroy = false) {
 
 		$option = get_option( 'discourse_sync' );
 		$relations = $option['relations'];
 		$data_id = $data['id'];
 		$body = $this->get_body($data_id);
 
-		$status = ((!$data['deleted_at'] || !$data['archived']) ? 'publish' : 'draft');
+		$status = !$destroy ? 'publish' : 'draft';
 		$wp_id = $relations[$data_id] != NULL ? $relations[$data_id] : 0;
 
 		try {

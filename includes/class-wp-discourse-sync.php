@@ -70,7 +70,7 @@ class wp_discourse_sync {
 		if ( defined( 'wp_discourse_sync_VERSION' ) ) {
 			$this->version = wp_discourse_sync_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			$this->version = '1.1.0';
 		}
 		$this->wp_discourse_sync = 'plugin-name';
 

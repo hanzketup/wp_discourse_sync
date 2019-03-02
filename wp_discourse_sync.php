@@ -9,7 +9,7 @@
  * Plugin Name:       WP Discourse Sync
  * Plugin URI:        https://github.com/hanzketup/wp_discourse_sync
  * Description:       Wordpress plugin that 'cross-posts' discourse topics to wordpress blog posts.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Hanzketup
  * Author URI:        https://hanneshermansson.com/
  * License:           GPL-2.0+
